@@ -111,7 +111,7 @@ class ContactService {
     def deleteImage(Contact contact) {
         if (contact.image) {
             String imageDirectory = "${FileUtil.getRootPath()}contact-image/"
-            println("IMAGEM A DELETAR:" + imageDirectory)
+            println("IMAGEM A DELETAR:" + imageDirectory + contact.image)
             File imageFile = new File(imageDirectory, contact.id + "-" + contact.image)
             println("ARQUIVO A DELETAR:" + imageFile)
             if (imageFile.exists()) {

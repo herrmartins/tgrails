@@ -68,6 +68,19 @@ class ContactDetailsService {
     }
 
     private def saveOrUpdate(def map) {
+        def fieldsToCheck = ['mobile', 'phone', 'email', 'website', 'address']
+
+        boolean allFieldsEmpty = fieldsToCheck.every { field ->
+            def value = map[field]
+            // Debug: Print the value of each field being checked
+            println("Checking field: ${field} with value: '${value}'")
+            return value == null || value.toString().trim().isEmpty()
+        }
+
+        if (allFieldsEmpty) {
+            return
+        }
+
         ContactDetails contactDetails
         if (map && map.id) {
             contactDetails = getById(map.id) ?: new ContactDetails()
@@ -80,28 +93,13 @@ class ContactDetailsService {
 
 
     def createOrUpdateDetails(Contact contact, def params) {
-        println("FUI CHAMADO")
-        def contactParams = ['mobile', 'phone', 'email', 'website', 'address']
-
         if (params.type instanceof String) {
-            boolean hasFilledContactParams = contactParams.any { param ->
-                params[param]?.trim()
-            }
-            println("ta vazio: " + hasFilledContactParams + " PARÂMETROS: " + params)
-            if (hasFilledContactParams) {
-                saveOrUpdate(getContactDetailsParamsParse(contact, params))
-            }
-            println("PARÂMETROS: " + params + " TIPO: " + params.type + "\n\n\n")
+            saveOrUpdate(getContactDetailsParamsParse(contact, params))
         } else if (params.type && params.type.getClass().isArray()) {
+            println("\n\nDADOS:" + params)
             Integer index = 0
             params.type.each {
-                boolean hasFilledContactParams = contactParams.any { param ->
-                    params[param]?.getAt(index)?.trim()
-                }
-                if (hasFilledContactParams) {
-                    println("DADO SENDO SALVO: ${index}")
-                    saveOrUpdate(getContactDetailsParamsParse(contact, params, index))
-                }
+                saveOrUpdate(getContactDetailsParamsParse(contact, params, index))
                 index++
             }
         }
