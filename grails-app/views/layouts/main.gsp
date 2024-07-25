@@ -4,7 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <title>
-        <g:layoutTitle default="Grails Online Contacts Book"/>
+    <g:layoutTitle default="Grails Online Contacts Book"/>
     </title>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
     <asset:link rel="icon" href="favicon.ico" type="image/x-ico"/>
@@ -35,7 +35,7 @@
         </button>
         %{--Member Action Menu--}%
         <ul class="navbar-nav ml-auto">
-            <UIHelper:memberActionMenu/>
+            <UIHelper:memberActionMenu controller="authentication" />
         </ul>
     </nav>
 </header>
@@ -56,9 +56,6 @@
         </main>
     </div>
 </div>
-
-
-
 
 </body>
 </html>

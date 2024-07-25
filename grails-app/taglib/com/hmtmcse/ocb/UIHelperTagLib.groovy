@@ -10,20 +10,22 @@ class UIHelperTagLib {
     def renderErrorMessage = { attrs, body ->
         def model = attrs.model
         String fieldName = attrs.fieldName
-        String errorMessage = attrs.errorMessage? g.message(code: attrs.errorMessage): g.message(code: "invalid.input")
-        if (model && model.errors && model.errors.getFieldError(fieldName)){
+        String errorMessage = attrs.errorMessage ? g.message(code: attrs.errorMessage) : g.message(code: "invalid.input")
+        if (model && model.errors && model.errors.getFieldError(fieldName)) {
             out << "<small class='form-text text-danger''><strong>${errorMessage}</strong></small>"
         }
     }
 
     def memberActionMenu = { attrs, body ->
+        if (!attrs.controller) {
+            throw new IllegalArgumentException("Parameter [controller] is required")
+        }
         out << '<li class="nav-item dropdown show">'
-        out << g.link(class:"nav-link dropdown-toggle", "data-toggle":"dropdown"){authenticationService.getMemberName()}
+        out << g.link(class: "nav-link dropdown-toggle", controller: attrs.controller, "data-toggle": "dropdown") { authenticationService.getMemberName() }
         out << '<div class="dropdown-menu">'
-        out << g.link(controller: "authentication", action: "logout", class: "dropdown-item"){g.message(code:"logout")}
+        out << g.link(controller: "authentication", action: "logout", class: "dropdown-item") { g.message(code: "logout") }
         out << "</div></li>"
     }
-
 
     def leftNavigation = { attrs, body ->
         List navigations = [
@@ -32,7 +34,7 @@ class UIHelperTagLib {
                 [controller: "contact", action: "index", name: "contact"],
         ]
 
-        if(authenticationService.isAdministratorMember()){
+        if (authenticationService.isAdministratorMember()) {
             navigations.add([controller: "member", action: "index", name: "member"])
         }
 
@@ -45,7 +47,7 @@ class UIHelperTagLib {
 
     def contactGroup = { attrs, body ->
         String name = attrs.name ?: "contactGroup"
-        out << g.select(class:"form-control", multiple: "multiple", optionValue: "name", optionKey: "id", value: attrs.value, name: name, from: contactGroupService.getGroupList())
+        out << g.select(class: "form-control", multiple: "multiple", optionValue: "name", optionKey: "id", value: attrs.value, name: name, from: contactGroupService.getGroupList())
     }
 
     def contactType = { attrs, body ->
@@ -55,12 +57,11 @@ class UIHelperTagLib {
         select.HOME = "Home"
         select.PERSONAL = "Personal"
         select.OTHER = "Other"
-        out << g.select(from: select, name: name, optionKey: "key", optionValue: "value", value: value, class:"form-control")
+        out << g.select(from: select, name: name, optionKey: "key", optionValue: "value", value: value, class: "form-control")
     }
-
 
     def appBaseURL = { attrs, body ->
-        out << AppUtil.baseURL();
+        out << AppUtil.baseURL()
     }
-
 }
+
